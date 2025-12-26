@@ -175,7 +175,7 @@
 
             <div class="sceneChangeDiv">
                 <input type="button" value="⬅️" @click="onSceneAdd(-1);">
-                scenes:{{scenes.length === 0 ? 0 : sceneIdx+1}}/{{scenes.length}}
+                シーン (Scenes):{{scenes.length === 0 ? 0 : sceneIdx+1}}/{{scenes.length}}
                 <input type="button" value="➡️" @click="onSceneAdd(1);">
             </div>
             <div>
@@ -194,11 +194,11 @@
                     </template>
                 </div>
                 <div class="viewportEmpty" v-if="!layers.some(l=>l.isShow)"
-                    :style="{ backgroundColor: viewportBGColor }">null</div>
+                    :style="{ backgroundColor: viewportBGColor }">なし (None)</div>
 
                 <div>
-                    viewportBGColor:<input type="color" v-model="viewportBGColor">
-                    <input type="button" value="bg" @click="bgViewportBGColor()">
+                    ビューポート背景色 (Viewport BG Color):<input type="color" v-model="viewportBGColor">
+                    <input type="button" value="背景 (BG)" @click="bgViewportBGColor()">
                 </div>
 
                 <div class="content">
@@ -222,10 +222,10 @@
         </div>
         <div class="right">
             <div>
-                <div>layers</div>
-                <input type="button" value="showAll" @click="setAllLayersShow(true);">
-                <input type="button" value="hideAll" @click="setAllLayersShow(false);">
-                <input type="button" value="reset" @click="resetAllLayers();">
+                <div>レイヤー (Layers)</div>
+                <input type="button" value="すべて表示 (Show All)" @click="setAllLayersShow(true);"><br>
+                <input type="button" value="すべて非表示 (Hide All)" @click="setAllLayersShow(false);"><br>
+                <input type="button" value="リセット (Reset)" @click="resetAllLayers();">
             </div>
             <div v-for="(layer, layerIdx) in layers" :key="layerIdx" :class="{ layer: true, grayBG: layer.isSelect }">
                 <input v-if="layer.isShow" type="button" value="👓" @click="onLayerBtnClick(layerIdx);">
