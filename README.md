@@ -1,134 +1,138 @@
 # LayerDiffLore
 
-A Vue.js-based layer difference visualization tool for displaying layered image compositing effects and differences across multiple images.
+日本語 | [English](README_EN.md)
 
-## Features
+レイヤー差分の可視化ツール。複数の画像レイヤーの合成効果と差分を表示するVue.jsベースのアプリケーション。
 
-- 📁 **Left Panel**: Displays all layer list with clickable layer toggling
-- 🎨 **Center View**: Shows layer composition results and image-text descriptions
-- 📚 **Right Panel**: Displays reference images and helpful tips
-- 🔄 **Multi-scene Support**: Switch between different layer combinations to showcase various effects
+(A Vue.js-based layer difference visualization tool for displaying layered image compositing effects and differences across multiple images.)
 
-## Quick Start
+## 機能
 
-### 1. Download Project
+- 📁 **左パネル**: すべてのレイヤーリストを表示、クリック可能なレイヤートグル機能
+- 🎨 **中央ビュー**: レイヤー合成結果と画像テキスト説明を表示
+- 📚 **右パネル**: 参照画像とヒント情報を表示
+- 🔄 **マルチシーン対応**: 異なるレイヤーの組み合わせ切り替えで様々な効果をデモンストレーション
+
+## クイックスタート
+
+### 1. プロジェクトをダウンロード
 
 ```
 https://github.com/h4cander/LayerDiffLore/archive/refs/heads/master.zip
 ```
 
-Or clone with Git:
+またはGitでクローン：
 ```bash
 git clone https://github.com/h4cander/LayerDiffLore.git
 ```
 
-### 2. Extract
+### 2. 展開
 
-Extract the downloaded file to your local folder.
+ダウンロードしたファイルをローカルフォルダに展開してください。
 
-### 3. Prepare Images
+### 3. 画像を準備
 
-- Place your images anywhere you prefer (e.g., `sample/`, `assets/`, etc.)
-- Place reference images in any location (e.g., `refs/`, `assets/ref/`, etc.)
-- Just update the file paths in the JavaScript configuration accordingly
+- 好きな場所に画像を配置してください（例：`sample/`、`assets/`など）
+- 参照画像を任意の場所に配置してください（例：`refs/`、`assets/ref/`など）
+- JavaScript設定ファイルでファイルパスを更新してください
 
-### 4. Configure JavaScript
+### 4. JavaScriptを設定
 
-Edit `sample/sample1.js` (or create your own config file) following this format:
+`sample/sample1.js`を編集してください（または独自の設定ファイルを作成）：
 
 ```javascript
 PageData.import({
-    name: "your_scene_name",
+    name: "シーン名",
     
-    note: `scene description
+    note: `シーンの説明
 `,
     
-    // Reference images and tips (use # for titles, ! for images)
+    // 参照画像とヒント（#はタイトル、!は画像）
     refs: `
-# Reference 1
+# 参照 1
 !refs/ref1.png
-Description of reference image
+参照画像の説明
 
-# Reference 2
+# 参照 2
 !refs/ref2.png
-Description of another reference image
+別の参照画像の説明
 `,
     
-    // Layer configuration - list layers from top to bottom (like drawing software)
+    // レイヤー設定 - 上から下へリスト（ドローソフトのように）
     layers: [
-      { url: "sample/top.png", name: "Top Layer", desc: "The top layer image" },
-      { url: "sample/middle.png", name: "Middle Layer", desc: "Middle layer" },
-        { url: "sample/bottom.png", name: "Bottom Layer", desc: "The bottom layer image" },
+      { url: "sample/top.png", name: "トップレイヤー", desc: "一番上のレイヤー画像" },
+      { url: "sample/middle.png", name: "ミドルレイヤー", desc: "中間レイヤー" },
+        { url: "sample/bottom.png", name: "ボトムレイヤー", desc: "一番下のレイヤー画像" },
     ].reverse(),
     
-    // Scenes and image-text content (use % to specify layers to display)
+    // シーンと画像テキスト内容（%で表示するレイヤーを指定）
     contents: `
-# Scene 1
+# シーン 1
 %sample/bottom.png
 %sample/middle.png
 %sample/top.png
-This is the description for scene 1
+シーン1の説明
 
-# Scene 2
+# シーン 2
 %sample/bottom.png
 %sample/top.png
-This is the description for scene 2 (middle layer is hidden)
+シーン2の説明（中間レイヤーは非表示）
 
-# Scene 3
+# シーン 3
 %sample/bottom.png
-This is the description for scene 3 (only bottom layer shown)
+シーン3の説明（ボトムレイヤーのみ表示）
 `
 });
 ```
 
-### 5. Link Script Files in HTML
+### 5. HTMLスクリプトをリンク
 
-In `index.html`, add `<script>` tags to load your configuration files. For example:
+`index.html`に`<script>`タグを追加して設定ファイルを読み込みます：
 
 ```html
 <script src="./sample/sample1.js"></script>
 <script src="./sample/sample2.js"></script>
 ```
 
-Add these tags **after** the PageData class definition (before the main Vue app script). If you create new config files, add corresponding `<script>` tags.
+これらのタグをPageDataクラス定義の後（メインのVueアプリスクリプトの前）に追加してください。新しい設定ファイルを作成したら、対応する`<script>`タグを追加してください。
 
-### 6. Open in Browser
+### 6. ブラウザで開く
 
-Simply open `index.html` directly in your web browser to use the tool.
+`index.html`をウェブブラウザで直接開いて使用できます。
 
-## Configuration Guide
+## 設定ガイド
 
-### Layers (layers)
+### レイヤー設定（layers）
 
-- **url**: Image file path
-- **name**: Layer name (displayed in left panel)
-- **desc**: Layer description (displayed on hover)
-- ⚠️ **Important**: Layer order determines stacking effect; bottom layers should come first in the array
+- **url**: 画像ファイルパス
+- **name**: レイヤー名（左パネルに表示）
+- **desc**: レイヤーの説明（ホバー時に表示）
+- ⚠️ **重要**: レイヤーの順序は重ね合わせの順序を決めます。下のレイヤーを配列の最初に配置してください
 
-### Scenes (contents)
+### シーン設定（contents）
 
-- Use `# Title` to define each scene
-- Use `%image_path` to specify which layers are shown in that scene
-- Order indicates stacking order (write bottom layers first, top layers last)
-- Remaining text serves as the scene description
+- `# タイトル`で各シーンを定義
+- `%画像パス`で表示するレイヤーを指定
+- 順序は重ね合わせ順序を示します（下のレイヤーを最初に、上のレイヤーを最後に）
+- 残りのテキストはシーンの説明になります
 
-### Reference Images (refs)
+### 参照画像（refs）
 
-- Use `# Title` for section headers
-- Use `!image_path` to embed images
-- Remaining text serves as descriptions
-- Provides design references and tips
+- `# タイトル`でセクションヘッダーを定義
+- `!画像パス`で画像を埋め込み
+- 残りのテキストは説明になります
+- デザイン参考資料とヒント情報を提供
 
-## License
+## ライセンス
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE) file for details.
+このプロジェクトはMITライセンスの下でライセンスされています。詳細は[LICENSE](LICENSE)ファイルを参照してください。
 
-### Dependencies
+### 依存関係
 
-This project uses the following open-source library:
+このプロジェクトは以下のオープンソースライブラリを使用しています：
 
 - **[Vue.js](https://vuejs.org/)** (v3.5.24) - Copyright (c) 2018-present Evan You
-  - Licensed under the MIT License
-  - Source: https://github.com/vuejs/core
+  - MITライセンスの下でライセンス
+  - ソース: https://github.com/vuejs/core
 
 
