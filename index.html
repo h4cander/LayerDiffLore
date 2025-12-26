@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <script src="./vue.global_3_5_24.js"></script>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: sans-serif;
+        }
+
+        .grayBG {
+            background-color: gainsboro;
+        }
+
+        #app {
+            display: flex;
+            height: 100%;
+        }
+
+        .left {
+            width: 15%;
+            background: #f8f8f8;
+            overflow-y: auto;
+            padding: 10px;
+            border-right: 1px solid #ccc;
+        }
+
+        .left h1 {
+            background-color: azure;
+            font-size: 1em;
+        }
+
+        .left img {
+            max-width: 100%;
+            max-height: 150px;
+            display: block;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .middle {
+            width: 60%;
+            overflow-y: auto;
+            padding: 10px;
+            background: #eee;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .width90 {
+            width: 90%;
+        }
+
+        .viewport {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .viewport img {
+            display: block;
+        }
+
+        .viewport img:not(:first-child) {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .middle .talk1 {
+            color: red;
+        }
+
+        .middle .talk2 {
+            color: orange;
+        }
+
+        .content h1 {
+            background-color: azure;
+            font-size: 1em;
+            /* padding: 10px; */
+            /* border-radius: 8px; */
+            /* width: 90%; */
+            /* box-shadow: 0 0 4px rgba(0, 0, 0, 0.2); */
+        }
+
+        .content img {
+            max-width: 200px;
+            max-height: 200px;
+        }
+
+        .right {
+            width: 20%;
+            background: #f8f8f8;
+            overflow-y: auto;
+            padding: 10px;
+            border-left: 1px solid #ccc;
+        }
+
+        .right .layer {
+            /* display: flex; */
+            align-items: center;
+            justify-content: flex-start;
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .right .layer input[type="button"] {
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        .layerDesc {
+            font-size: 0.7em;
+        }
+
+        .viewportEmpty {
+            height: 200px;
+            width: 200px;
+            margin-bottom: 20px;
+        }
+
+        .sceneChangeDiv {
+            font-size: 2em;
+        }
+
+        .sceneChangeDiv input {
+            font-size: 1em;
+            margin: 10px;
+        }
+
+        .subImg {
+            border: 2px solid black;
+            max-height: 100px;
+            max-width: 100px;
+            margin: 5px;
+        }
+
+        .divNote {
+            font-weight: bold;
+            background-color: lightskyblue;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="left">
+            <div v-for="(r, refIdx) in refHtmls" :key="refIdx">
+                <template v-if="r.tag==='h1'">
+                    <component :is="r.tag">{{ r.val }}</component>
+                </template>
+                <template v-else-if="r.tag==='img'">
+                    {{getFileName(r.url)}}<a :href="r.url" target="_blank"><img :src="r.url"></a>
+                </template>
+                <template v-else>
+                    {{r.val}}
+                </template>
+            </div>
+        </div>
+        <div class="middle">
+            <div class="width90">
+                <input v-for="(page, pageIdx) in pages" :key="pageIdx" type="button" :value="page.name"
+                    @click="load(page);">
+            </div>
+
+            <div class="sceneChangeDiv">
+                <input type="button" value="⬅️" @click="onSceneAdd(-1);">
+                scenes:{{scenes.length === 0 ? 0 : sceneIdx+1}}/{{scenes.length}}
+                <input type="button" value="➡️" @click="onSceneAdd(1);">
+            </div>
+            <div>
+                <input v-for="(scene, pIdx) in scenes" :key="pIdx" type="button" :value="pIdx+1"
+                    @click="onSceneUpdate(pIdx);">
+            </div>
+            <div>
+                <input type="button" value="➖" @click="viewportMaxHeightAdd(-50)">
+                <input type="button" value="➕" @click="viewportMaxHeightAdd(50)">
+            </div>
+
+            <div v-if="scenes.length>0" class="width90">
+                <div class="viewport" :style="{ backgroundColor: viewportBGColor }">
+                    <template v-for="(layer, layerRIdx) in layers.toReversed()" :key="layerRIdx">
+                        <img v-if="layer.isShow" :src="layer.url" :style="{ maxHeight: getViewportMaxHeight() }">
+                    </template>
+                </div>
+                <div class="viewportEmpty" v-if="!layers.some(l=>l.isShow)"
+                    :style="{ backgroundColor: viewportBGColor }">null</div>
+
+                <div>
+                    viewportBGColor:<input type="color" v-model="viewportBGColor">
+                    <input type="button" value="bg" @click="bgViewportBGColor()">
+                </div>
+
+                <div class="content">
+                    <div class="divNote">{{note}}</div>
+                    <template v-for="(h, hIdx) in scenes[sceneIdx].htmls" :key="hIdx">
+                        <template v-if="h.tag==='h1'">
+                            <component :is="h.tag">{{ h.val }}</component>
+                        </template>
+                        <template v-else-if="h.tag==='img'">
+                            <a :href="h.url" target="_blank"><img :src="h.url" :alt="getFileName(h.url)"></a>
+                        </template>
+                        <template v-else-if="h.tag==='div'">
+                            <div :class="h.class">{{h.val}}</div>
+                        </template>
+                        <template v-else>
+                            {{h.val}}
+                        </template>
+                    </template>
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <div>
+                <div>layers</div>
+                <input type="button" value="showAll" @click="setAllLayersShow(true);">
+                <input type="button" value="hideAll" @click="setAllLayersShow(false);">
+                <input type="button" value="reset" @click="resetAllLayers();">
+            </div>
+            <div v-for="(layer, layerIdx) in layers" :key="layerIdx" :class="{ layer: true, grayBG: layer.isSelect }">
+                <input v-if="layer.isShow" type="button" value="👓" @click="onLayerBtnClick(layerIdx);">
+                <input v-if="!layer.isShow" type="button" value="🕶️" @click="onLayerBtnClick(layerIdx);">
+                <input type="button" value="↗️" @click="openBlank(layer.url);">
+                {{getFileName(layer.url)}}
+                <div v-if="layer.desc">{{layer.desc}}</div>
+            </div>
+        </div>
+
+
+    </div>
+    <script>
+        class PageData {
+            constructor({ name, note, refs, layers, contents }) {
+                this.name = name;
+                this.note = note;
+                this.refs = refs;
+                this.layers = layers;
+                this.contents = contents;
+            }
+
+            static data = [];
+
+            static import({ name, note, refs, layers, contents }) {
+                PageData.data.push(new PageData({ name, note, refs, layers, contents }));
+            }
+        }
+    </script>
+    <script src="./sample/sample1.js"></script>
+    <script src="./sample/sample2.js"></script>
+
+    <script>
+        const { createApp, nextTick } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    pages: PageData.data,
+                    refHtmls: [],
+                    layers: [],
+                    scenes: [],
+                    sceneIdx: 0,
+                    viewportBGColor: "#DDDDDD",
+                    note: "",
+                    viewportMaxHeight: 600
+                }
+            },
+            async mounted() {
+
+            },
+            methods: {
+                load(page) {
+                    this.note = page.note;
+
+                    this.refHtmls = this.htmlData(page.refs, l => l);
+
+                    this.layers = page.layers.map(l => {
+                        return {
+                            url: l.url,
+                            desc: l.desc
+                        };
+                    }).reverse();
+
+                    this.scenes = this.splitByHashBlocks(page.contents).map(scene => {
+                        const layers = scene.split(/\r?\n/).filter(l => l.startsWith("%")).map(l => l.slice(1));
+                        return {
+                            layers: layers,
+                            htmls: this.htmlData(scene, l => l && !l.startsWith("%"))
+                        };
+                    });
+
+                    this.sceneIdx = 0;
+                    this.updateViewPort();
+                },
+                onSceneAdd(val) {
+                    this.onSceneUpdate(this.sceneIdx + val);
+                },
+                onSceneUpdate(v) {
+                    if (v < 0) v = 0;
+                    if (v >= this.scenes.length) v = this.scenes.length - 1;
+                    this.sceneIdx = v;
+                    this.updateViewPort();
+                },
+                updateViewPort() {
+                    if (this.scenes.length === 0) return;
+                    const scene = this.scenes[this.sceneIdx];
+                    this.layers.forEach(layer => {
+                        layer.isShow = scene.layers.some(l => l === layer.url);
+                        layer.isSelect = layer.isShow;
+                    });
+                },
+                onLayerBtnClick(layerIdx) {
+                    this.layers[layerIdx].isShow = !this.layers[layerIdx].isShow;
+                },
+                setAllLayersShow(isShow) {
+                    this.layers.forEach(l => {
+                        l.isShow = isShow;
+                    });
+                },
+                resetAllLayers() {
+                    this.layers.forEach(l => {
+                        l.isShow = l.isSelect
+                    });
+                },
+                bgViewportBGColor() {
+                    this.viewportBGColor = "#EEE";
+                },
+                htmlData(text, filter) {
+                    return text.split(/\r?\n/).map(l => l.trim()).filter(filter).map(l => {
+                        if (l.startsWith("#")) return { tag: "h1", val: l.slice(1) };
+                        if (l.startsWith("!")) return { tag: "img", url: l.slice(1) };
+                        if (l.startsWith("$$")) return { tag: "div", val: l, class: "talk2" };
+                        if (l.startsWith("$")) return { tag: "div", val: l, class: "talk1" };
+                        return { tag: "div", val: l };
+                    });
+                },
+                getFileName(url) {
+                    return url.split("/").pop();
+                },
+                splitByHashBlocks(text) {
+                    const lines = text.split(/\r?\n/);
+                    const blocks = [];
+                    let current = [];
+
+                    for (let line of lines) {
+                        if (line.trim().startsWith("#")) {
+                            if (current.length > 0) {
+                                blocks.push(current.join("\n").trim());
+                                current = [];
+                            }
+                        }
+                        if (line.trim() !== "" || current.length > 0) {
+                            current.push(line);
+                        }
+                    }
+
+                    if (current.length > 0) {
+                        blocks.push(current.join("\n").trim());
+                    }
+
+                    return blocks;
+                },
+                openBlank(url) {
+                    window.open(url, "_blank");
+                },
+                viewportMaxHeightAdd(val) {
+                    this.viewportMaxHeight += val;
+                },
+                getViewportMaxHeight() {
+                    return `${this.viewportMaxHeight}px`;
+                }
+            }
+        }).mount("#app");
+    </script>
+</body>
+
+</html>
