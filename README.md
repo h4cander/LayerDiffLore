@@ -81,7 +81,18 @@ This is the description for scene 3 (only bottom layer shown)
 });
 ```
 
-### 5. Open in Browser
+### 5. Link Script Files in HTML
+
+In `index.html`, add `<script>` tags to load your configuration files. For example:
+
+```html
+<script src="./sample/sample1.js"></script>
+<script src="./sample/sample2.js"></script>
+```
+
+Add these tags **after** the PageData class definition (before the main Vue app script). If you create new config files, add corresponding `<script>` tags.
+
+### 6. Open in Browser
 
 Simply open `index.html` directly in your web browser to use the tool.
 
