@@ -8,12 +8,12 @@ note: no sky
 `,
     refs: `
 # ref1
-!_refs/ref1.png
+!refs/ref1.png
 ref1
 
 
 # ref2
-!_refs/ref2.png
+!refs/ref2.png
 ref2
 
 `,
