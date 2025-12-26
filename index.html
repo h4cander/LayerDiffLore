@@ -231,7 +231,7 @@
                 <input v-if="layer.isShow" type="button" value="👓" @click="onLayerBtnClick(layerIdx);">
                 <input v-if="!layer.isShow" type="button" value="🕶️" @click="onLayerBtnClick(layerIdx);">
                 <input type="button" value="↗️" @click="openBlank(layer.url);">
-                {{getFileName(layer.url)}}
+                {{layer.name || getFileName(layer.url)}}
                 <div v-if="layer.desc">{{layer.desc}}</div>
             </div>
         </div>
@@ -288,6 +288,7 @@
                     this.layers = page.layers.map(l => {
                         return {
                             url: l.url,
+                            name: l.name,
                             desc: l.desc
                         };
                     }).reverse();

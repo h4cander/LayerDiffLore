@@ -16,12 +16,12 @@ ref2
 
 `,
     layers: [
-        { url: "sample/star.png", name: "star.png", desc: "this is star" },
-        { url: "sample/night.png", name: "night.png", desc: "" },
-        { url: "sample/cloud.png", name: "cloud.png", desc: "" },
-        { url: "sample/sun.png", name: "sun.png", desc: "" },
-        { url: "sample/ground.png", name: "ground.png", desc: "" },
-        { url: "sample/sky.png", name: "sky.png", desc: "this is sky" },
+        { url: "sample/star.png", name: "star", desc: "this is star" },
+        { url: "sample/night.png", name: "night", desc: "" },
+        { url: "sample/cloud.png", name: "cloud", desc: "" },
+        { url: "sample/sun.png", name: "", desc: "" },
+        { url: "sample/ground.png", name: "ground", desc: "" },
+        { url: "sample/sky.png", name: "sky", desc: "this is sky" },
     ].reverse(),
     contents: `
 # morning

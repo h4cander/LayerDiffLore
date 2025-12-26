@@ -15,11 +15,11 @@ PageData.import({
 
 `,
     layers: [
-        { url: "sample/star.png", name: "星.png", desc: "これは星です" },
-        { url: "sample/night.png", name: "夜.png", desc: "" },
-        { url: "sample/cloud.png", name: "雲.png", desc: "" },
-        { url: "sample/sun.png", name: "太陽.png", desc: "" },
-        { url: "sample/ground.png", name: "地面.png", desc: "" },
+        { url: "sample/star.png", name: "星", desc: "これは星です" },
+        { url: "sample/night.png", name: "夜", desc: "" },
+        { url: "sample/cloud.png", name: "雲", desc: "" },
+        { url: "sample/sun.png", name: "", desc: "" },
+        { url: "sample/ground.png", name: "地面", desc: "" },
     ].reverse(),
     contents: `
 # 朝
