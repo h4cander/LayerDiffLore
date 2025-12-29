@@ -27,6 +27,7 @@ ref2
 %sample/cloud.png
 %sample/ground.png
 this is morning scene
+!refs/ref2.png
 
 # noon
 %sample/cloud.png

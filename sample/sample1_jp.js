@@ -30,6 +30,7 @@ PageData.import({
 %sample/cloud.png
 %sample/ground.png
 これは朝のシーンです
+!refs/ref1.png
 
 # 昼
 %sample/sky.png
